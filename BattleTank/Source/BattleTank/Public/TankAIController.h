@@ -20,6 +20,18 @@ protected:
 
 public:
 	ATank* GetControlledTank() const;
+	ATank* GetPlayerTank() const;
 	
-	
+private:
+
+	void Tick(float DeltaTime);
+	 
+	UPROPERTY(EditAnywhere)
+		float CrossHairXLocation = 0.5;
+
+	UPROPERTY(EditAnywhere)
+		float CrossHairYLocation = 0.33333;
+
+	UPROPERTY(EditAnywhere)
+		float LineTraceRange = 1000000.;
 };
