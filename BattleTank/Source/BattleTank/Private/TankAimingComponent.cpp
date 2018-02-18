@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankAimingComponent.h"
-
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+#include "TankBarrel.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -14,26 +16,40 @@ UTankAimingComponent::UTankAimingComponent()
 }
 
 
-// Called when the game starts
-void UTankAimingComponent::BeginPlay()
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
-	Super::BeginPlay();
-
-	// ...
-	
+	Barrel = BarrelToSet;
 }
 
 
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (!Barrel)
+		return;
+	FVector OutLaunchVelocity;
+	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 
-	// ...
+	bool  bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(
+		this,
+		OutLaunchVelocity,
+		StartLocation,
+		HitLocation,
+		LaunchSpeed,
+		ESuggestProjVelocityTraceOption::DoNotTrace);
+	if(bHaveAimSolution){
+
+		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		auto BarrelLocation = Barrel->GetComponentLocation().ToString();
+		//UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s from %s at %s"), *GetOwner()->GetName(), *HitLocation.ToString(), *BarrelLocation, *OutLaunchVelocity.ToString())
+		MoveBarrelTowards(AimDirection);
+	}
 }
 
-void UTankAimingComponent::AimAt(FVector HitLocation)
-{
-	UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s"), *GetOwner()->GetName(), *(HitLocation.ToString()));
+void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection) {
+	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+	auto AimAsRotator = AimDirection.Rotation();
+	auto DeltaRotator = AimAsRotator - BarrelRotator;
+	//UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"),*AimAsRotator.ToString())
+	Barrel->Elevate(4);
 }
 
