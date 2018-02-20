@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "TankAimingComponent.h"
+//#include "TankAimingComponent.h"
 #include "Tank.generated.h" //Add includes above this line
 
+class UTankAimingComponent;
 class UTankBarrel;
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -26,10 +27,7 @@ protected:
 	virtual void BeginPlay() override;
 	UTankAimingComponent* TankAimingComponent = nullptr;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+public:	 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
