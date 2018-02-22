@@ -4,13 +4,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true; //todo should this tick?
+	PrimaryComponentTick.bCanEverTick = false;  
 
 	// ...
 }
@@ -18,7 +19,22 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	if (!BarrelToSet) {
+		UE_LOG(LogTemp, Warning, TEXT("INVALID BARREL from "))
+			return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("VALID BARREL from "))
 	Barrel = BarrelToSet;
+}
+
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+	if (!TurretToSet) {
+		UE_LOG(LogTemp, Warning, TEXT("INVALID TURRET from "))
+			return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("VALID TURRET from "))
+	Turret = TurretToSet;
 }
 
 
@@ -26,6 +42,12 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
 	if (!Barrel)
 		return;
+
+	if (!Turret) {
+	//	UE_LOG(LogTemp, Warning, TEXT("INVALID TURRET from "))
+			return;
+	}
+		
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 
@@ -54,5 +76,6 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection) {
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 	//UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"),*AimAsRotator.ToString())
 	Barrel->Elevate(DeltaRotator.Pitch);
+	Turret->Rotate(DeltaRotator.Yaw);
 }
 
