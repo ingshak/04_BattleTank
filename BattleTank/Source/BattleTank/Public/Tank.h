@@ -6,11 +6,12 @@
 #include "GameFramework/Pawn.h"
 //#include "TankAimingComponent.h"
 #include "Tank.generated.h" //Add includes above this line
-
+//forward declarations
 class UTankAimingComponent;
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
+class UTankMovementComponent;
 UCLASS()
 class BATTLETANK_API ATank : public APawn
 {
@@ -37,7 +38,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	UTankAimingComponent* TankAimingComponent = nullptr;
-
+	UPROPERTY(BlueprintReadonly)
+	UTankMovementComponent* TankMovementComponent = nullptr;
 private:
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
