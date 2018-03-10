@@ -31,4 +31,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		float LineTraceRange = 1000000.;
+
+	//How close can the AI get to the player.
+	float AcceptanceRadius = 3000.;
 };
