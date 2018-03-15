@@ -3,12 +3,7 @@
 #include "TankMovementComponent.h"
 #include "TankTrack.h"
 void UTankMovementComponent::IntendMoveForward(float Throw) {
-	if (!LeftTrack) {
-		UE_LOG(LogTemp, Warning, TEXT("Left Track not set"));
-		return;
-	}
-	if (!RightTrack) {
-		UE_LOG(LogTemp, Warning, TEXT("Rigth Track not set"));
+	if (!ensure(LeftTrack && RightTrack)) {
 		return;
 	}
 	LeftTrack->SetThrottle(Throw);
@@ -17,14 +12,9 @@ void UTankMovementComponent::IntendMoveForward(float Throw) {
 }
 
 void UTankMovementComponent::IntendTurnRight(float Throw) {
-	if (!LeftTrack) {
-		UE_LOG(LogTemp, Warning, TEXT("Left Track not set"));
+	if (!ensure(LeftTrack && RightTrack)) {
 		return;
-	}
-	if (!RightTrack) {
-		UE_LOG(LogTemp, Warning, TEXT("Rigth Track not set"));
-		return;
-	}
+	} 
 	LeftTrack->SetThrottle(Throw);
 	RightTrack->SetThrottle(-Throw);
 }
