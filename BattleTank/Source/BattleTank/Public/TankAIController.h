@@ -18,7 +18,9 @@ class BATTLETANK_API ATankAIController : public AAIController
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-		
+	//How close can the AI get to the player.
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float AcceptanceRadius = 8000;
 private:
 
 	void Tick(float DeltaTime);
@@ -32,6 +34,5 @@ private:
 	UPROPERTY(EditAnywhere)
 		float LineTraceRange = 1000000.;
 
-	//How close can the AI get to the player.
-	float AcceptanceRadius = 3000.;
+
 };
